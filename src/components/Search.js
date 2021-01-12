@@ -11,7 +11,7 @@ class Search extends React.Component {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     if (prevProps.zip !== this.props.zip) {
       this.componentDidMount();
     }
@@ -20,36 +20,50 @@ class Search extends React.Component {
     console.log(this.props.zip);
     console.log(this.state.zipCodes);
     console.log(typeof this.state.zipCodes);
+    this.setState({
+      isLoaded: false,
+    })
     fetch("http://ctp-zip-api.herokuapp.com/zip/" + `${this.props.zip}`)
-      .then((response) => response.json())
+      .then((response) => {
+        console.log(response)
+        if(response.status !== 200){
+          throw new Error("No result")
+        }
+        return response.json()
+      })
       .then((result) => {
+        this.setState({
+          isLoaded: true,
+        })
         if (result.length !== 0) {
           this.setState({
             isLoaded: true,
             zipCodes: result,
           });
-        } else {
-          this.setState({
-            isLoaded: true,
-            zipCodes: [],
-          });
         }
       })
-      .catch((error) => this.setState({ error }));
+      .catch((error) => {
+        console.log(error)
+        this.setState({ 
+          error,
+          zipCodes: [],
+          isLoaded: true,
+        })
+      })
   }
 
   render() {
     const { error, isLoaded, zipCodes } = this.state;
-    if (this.state.zipCodes.length === null || "") {
-      return <div>No results found</div>;
+    if (this.state.zipCodes.length === 0) {
+      return <h1>No results found</h1>;
     } else if (!isLoaded) {
-      return <div>Loading...</div>;
+      return <h4>Loading...</h4>;
     } else {
       return (
         <div>
           {zipCodes.map((code) => (
-              <div className="card">
-              <h4 key={code.RecordNumber}>
+              <div className="card" key={code.RecordNumber}>
+              <h4>
                 {code.City},{code.State}
               </h4>
               <p>Location: ({code.Lat}, {code.Long})</p>

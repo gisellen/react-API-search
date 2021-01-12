@@ -6,10 +6,10 @@
   height: 100%;
   position: absolute;
   flex-direction: column;
+  
 }
 
 .search h4{
   background-color: darkslategrey;
   color: oldlace;
-  
 }

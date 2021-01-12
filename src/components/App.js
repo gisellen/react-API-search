@@ -22,10 +22,12 @@ class App extends React.Component {
         <form>
           <input
             type="text"
+            name="text"
             placeholder="try 10016"
             onChange={this.handleChange}
           />
         </form>
+        <h1>{this.state.value}</h1>
         <Search zip={this.state.value}/>
       </div>
     );
