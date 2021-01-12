@@ -17,9 +17,6 @@ class Search extends React.Component {
     }
   }
   componentDidMount() {
-    console.log(this.props.zip);
-    console.log(this.state.zipCodes);
-    console.log(typeof this.state.zipCodes);
     this.setState({
       isLoaded: false,
     })
